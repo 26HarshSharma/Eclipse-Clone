@@ -33,7 +33,7 @@ const auth = getAuth();
 const signup = document.getElementById("sign-up");
 const login = document.getElementById("log-in");
 
-signup.addEventListener("submit", (event) => {
+signup.addEventListener("click", (event) => {
   event.preventDefault();
   let email = document.getElementById("exampleInputEmail1").value;
   let password = document.getElementById("exampleInputPassword1").value;
