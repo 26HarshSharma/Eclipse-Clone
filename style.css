@@ -47,3 +47,7 @@ main {
 .disp {
   display: none;
 }
+
+#user-sign-out {
+  display: none;
+}

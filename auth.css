@@ -1,0 +1,15 @@
+#user-created {
+  display: none;
+}
+
+#user-exists {
+  display: none;
+}
+
+#user-loggedin {
+  display: none;
+}
+
+#user-invalid {
+  display: none;
+}

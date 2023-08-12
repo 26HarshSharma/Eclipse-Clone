@@ -33,11 +33,18 @@
     <header>
       <nav class="navbar bg-body-tertiary">
         <form class="container-fluid justify-content-start">
-          <button class="btn btn-outline-success me-2" type="button">
-            Login
-          </button>
+          <a href="signup.html" class="btn btn-outline-success me-2">
+            Sign Up
+          </a>
+          <a href="#" id="logout" class="btn btn-outline-success me-2">
+            Sign Out
+          </a>
+          <a href="login.html" class="btn btn-outline-success me-2"> Login </a>
         </form>
       </nav>
+      <div id="user-sign-out" class="alert alert-success" role="alert">
+        Sign Out Successful
+      </div>
     </header>
     <main>
       <div class="alert alert-danger disp" role="alert">
@@ -69,29 +76,4 @@
       </section>
     </main>
   </body>
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyBAMn46OvYvoxI1STttMBW2QQzNMkVK3QI",
-      authDomain: "fir-38a44.firebaseapp.com",
-      databaseURL:
-        "https://fir-38a44-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "fir-38a44",
-      storageBucket: "fir-38a44.appspot.com",
-      messagingSenderId: "964306008147",
-      appId: "1:964306008147:web:442519f6ed3319679eaea6",
-      measurementId: "G-XQP42QYYH5",
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
 </html>

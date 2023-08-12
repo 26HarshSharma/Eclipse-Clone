@@ -6,15 +6,28 @@ import {
   onValue,
   remove,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 
 const appSettings = {
   databaseURL:
     "https://fir-38a44-default-rtdb.europe-west1.firebasedatabase.app/",
+  apiKey: "AIzaSyBAMn46OvYvoxI1STttMBW2QQzNMkVK3QI",
+  authDomain: "fir-38a44.firebaseapp.com",
+  projectId: "fir-38a44",
+  storageBucket: "fir-38a44.appspot.com",
+  messagingSenderId: "964306008147",
+  appId: "1:964306008147:web:442519f6ed3319679eaea6",
+  measurementId: "G-XQP42QYYH5",
 };
 
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const productsInDB = ref(database, "products");
+const auth = getAuth();
 
 onValue(productsInDB, function (snapshot) {
   //If our db got empty, we deleted all elements, then our snapshot will not exist.
@@ -35,6 +48,7 @@ onValue(productsInDB, function (snapshot) {
 const products = document.getElementById("products");
 const add = document.getElementById("add");
 let list = document.getElementById("list");
+const logout = document.getElementById("logout");
 
 function insertProducts(products) {
   let productId = products[0];
@@ -70,4 +84,14 @@ add.addEventListener("click", () => {
   }
   clearInputField();
   push(productsInDB, productsVal);
+});
+
+logout.addEventListener("click", (event) => {
+  event.preventDefault();
+  auth.signOut().then(() => {
+    document.getElementById("user-sign-out").style.display = "block";
+    setTimeout(function () {
+      document.getElementById("user-sign-out").style.display = "none";
+    }, 3000);
+  });
 });
