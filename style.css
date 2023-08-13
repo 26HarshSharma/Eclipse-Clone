@@ -28,6 +28,7 @@ main {
 #list {
   margin: 22px auto;
   width: 100%;
+  padding: 0;
 }
 
 .list-items {

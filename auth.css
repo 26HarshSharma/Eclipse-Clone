@@ -13,3 +13,7 @@
 #user-invalid {
   display: none;
 }
+
+#user-invalid-password {
+  display: none;
+}

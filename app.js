@@ -8,7 +8,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
 import {
   getAuth,
-  createUserWithEmailAndPassword,
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 
@@ -94,4 +93,16 @@ logout.addEventListener("click", (event) => {
       document.getElementById("user-sign-out").style.display = "none";
     }, 3000);
   });
+});
+
+auth.onAuthStateChanged((user) => {
+  if (user === null) {
+    list.style.display = "none";
+    const p = document.createElement("p");
+    p.textContent = "Please login to see all products :)";
+    document.getElementsByClassName("products-list")[0].append(p);
+  } else {
+    list.style.display = "block";
+  }
+  console.log(user);
 });

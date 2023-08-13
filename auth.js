@@ -86,5 +86,15 @@ login.addEventListener("click", (event) => {
           document.getElementById("user-invalid").style.display = "none";
         }, 3000);
       }
+      if (errorCode == "auth/wrong-password") {
+        document.getElementById("user-invalid-password").style.display =
+          "block";
+        setTimeout(function () {
+          document.getElementById("user-invalid-password").style.display =
+            "none";
+        }, 3000);
+      }
     });
 });
+
+//listen for authentication changes
