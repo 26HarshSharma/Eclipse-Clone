@@ -98,11 +98,15 @@ logout.addEventListener("click", (event) => {
 auth.onAuthStateChanged((user) => {
   if (user === null) {
     list.style.display = "none";
+    add.style.display = "none";
+    products.style.display = "none";
     const p = document.createElement("p");
-    p.textContent = "Please login to see all products :)";
+    p.textContent = "Please login to add or see products :)";
     document.getElementsByClassName("products-list")[0].append(p);
   } else {
     list.style.display = "block";
+    add.style.display = "inline";
+    products.style.display = "block";
   }
   console.log(user);
 });
