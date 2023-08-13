@@ -23,11 +23,13 @@ const appSettings = {
   measurementId: "G-XQP42QYYH5",
 };
 
+//some firebase stuff, needed for all projects based on firebase.
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const productsInDB = ref(database, "products");
 const auth = getAuth();
 
+//fetching data from firebase DB
 onValue(productsInDB, function (snapshot) {
   //If our db got empty, we deleted all elements, then our snapshot will not exist.
   if (!snapshot.exists()) {
@@ -49,6 +51,7 @@ const add = document.getElementById("add");
 let list = document.getElementById("list");
 const logout = document.getElementById("logout");
 
+//Logic to insert products into the UI
 function insertProducts(products) {
   let productId = products[0];
   let productVal = products[1];
@@ -59,6 +62,7 @@ function insertProducts(products) {
   list.append(listItem);
 }
 
+//deleting elemets from DB
 let removeProducts = (productId) => {
   let exactLocationOfProductsInDB = ref(database, `products/${productId}`);
   remove(exactLocationOfProductsInDB);
@@ -82,9 +86,10 @@ add.addEventListener("click", () => {
     return;
   }
   clearInputField();
+  //pushing items to DB (firebase)
   push(productsInDB, productsVal);
 });
-
+//signing out functionality
 logout.addEventListener("click", (event) => {
   event.preventDefault();
   auth.signOut().then(() => {
@@ -94,7 +99,7 @@ logout.addEventListener("click", (event) => {
     }, 3000);
   });
 });
-
+//user status (logged in or logged out)
 auth.onAuthStateChanged((user) => {
   if (user === null) {
     list.style.display = "none";
@@ -103,10 +108,18 @@ auth.onAuthStateChanged((user) => {
     const p = document.createElement("p");
     p.textContent = "Please login to add or see products :)";
     document.getElementsByClassName("products-list")[0].append(p);
+
+    logout.style.display = "none";
+    document.getElementById("login").style.display = "block";
+    document.getElementById("signUp").style.display = "block";
   } else {
     list.style.display = "block";
     add.style.display = "inline";
     products.style.display = "block";
+    logout.style.display = "block";
+
+    document.getElementById("login").style.display = "none";
+    document.getElementById("signUp").style.display = "none";
   }
   console.log(user);
 });
