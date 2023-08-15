@@ -34,19 +34,25 @@ let list = document.getElementById("list");
 const logout = document.getElementById("logout");
 
 //Logic to insert products into the UI
-function insertProducts(products) {
+function insertProducts(products, loggedInUser) {
+  //console.log(loggedInUser);
   let productId = products[0];
   let productVal = products[1];
   let listItem = document.createElement("li");
   listItem.textContent = `${productVal}`;
   listItem.classList.add("list-items");
-  listItem.addEventListener("click", () => removeProducts(productId));
+  listItem.addEventListener("click", () =>
+    removeProducts(productId, loggedInUser)
+  );
   list.append(listItem);
 }
 
 //deleting elemets from DB
-let removeProducts = (productId) => {
-  let exactLocationOfProductsInDB = ref(database, `products/${productId}`);
+let removeProducts = (productId, loggedInUser) => {
+  let exactLocationOfProductsInDB = ref(
+    database,
+    `products/${loggedInUser}/${productId}`
+  );
   remove(exactLocationOfProductsInDB);
 };
 
@@ -87,16 +93,17 @@ add.addEventListener("click", () => {
         list.innerHTML = "No items here...yet";
         return;
       }
+      //console.log(loggedInUser);
       let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
       //let productsArrayKeys = Object.keys(snapshot.val()); //convert object to array of object keys.
       //let productsArrayValues = Object.Values(snapshot.val()); //convert object to array of object values.
       //console.log(productsArrayKeys);
       clearList();
       for (let product of productsArrayEnteries) {
-        insertProducts(product);
+        insertProducts(product, loggedInUser);
       }
     });
-  }, 1000);
+  }, 0);
 });
 //signing out functionality
 logout.addEventListener("click", (event) => {
