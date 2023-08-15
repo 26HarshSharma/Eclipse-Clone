@@ -26,25 +26,7 @@ const appSettings = {
 //some firebase stuff, needed for all projects based on firebase.
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
-const productsInDB = ref(database, "products");
 const auth = getAuth();
-
-//fetching data from firebase DB
-onValue(productsInDB, function (snapshot) {
-  //If our db got empty, we deleted all elements, then our snapshot will not exist.
-  if (!snapshot.exists()) {
-    list.innerHTML = "No items here...yet";
-    return;
-  }
-  let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
-  //let productsArrayKeys = Object.keys(snapshot.val()); //convert object to array of object keys.
-  //let productsArrayValues = Object.Values(snapshot.val()); //convert object to array of object values.
-  //console.log(productsArrayKeys);
-  clearList();
-  for (let product of productsArrayEnteries) {
-    insertProducts(product);
-  }
-});
 
 const products = document.getElementById("products");
 const add = document.getElementById("add");
@@ -87,7 +69,34 @@ add.addEventListener("click", () => {
   }
   clearInputField();
   //pushing items to DB (firebase)
-  push(productsInDB, productsVal);
+  let loggedInUser;
+  auth.onAuthStateChanged((user) => {
+    if (user === null) return;
+    loggedInUser = user.uid;
+  });
+  setTimeout(function () {
+    console.log(loggedInUser);
+    const productsInDB = ref(database, `products/${loggedInUser}`);
+    push(productsInDB, productsVal);
+
+    //fetching data from firebase DB
+    onValue(productsInDB, function (snapshot) {
+      //If our db got empty, we deleted all elements, then our snapshot will not exist.
+      // console.log(Object.entries(snapshot.val()));
+      if (!snapshot.exists()) {
+        list.innerHTML = "No items here...yet";
+        return;
+      }
+      let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
+      //let productsArrayKeys = Object.keys(snapshot.val()); //convert object to array of object keys.
+      //let productsArrayValues = Object.Values(snapshot.val()); //convert object to array of object values.
+      //console.log(productsArrayKeys);
+      clearList();
+      for (let product of productsArrayEnteries) {
+        insertProducts(product);
+      }
+    });
+  }, 1000);
 });
 //signing out functionality
 logout.addEventListener("click", (event) => {
@@ -121,5 +130,5 @@ auth.onAuthStateChanged((user) => {
     document.getElementById("login").style.display = "none";
     document.getElementById("signUp").style.display = "none";
   }
-  console.log(user);
+  // console.log(user.uid);
 });
