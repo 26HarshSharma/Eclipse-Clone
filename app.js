@@ -32,6 +32,46 @@ const products = document.getElementById("products");
 const add = document.getElementById("add");
 let list = document.getElementById("list");
 const logout = document.getElementById("logout");
+const show = document.getElementById("show");
+
+show.addEventListener("click", () => {
+  let loggedInUser;
+  auth.onAuthStateChanged((user) => {
+    if (user === null) return;
+    loggedInUser = user.uid;
+  });
+  setTimeout(function () {
+    const productsInDB = ref(database, `products/${loggedInUser}`);
+
+    //fetching data from firebase DB
+    onValue(productsInDB, function (snapshot) {
+      //If our db got empty, we deleted all elements, then our snapshot will not exist.
+      if (!snapshot.exists()) {
+        list.innerHTML = "No items here...yet";
+        return;
+      }
+
+      let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
+      //let productsArrayKeys = Object.keys(snapshot.val()); //convert object to array of object keys.
+      //let productsArrayValues = Object.Values(snapshot.val()); //convert object to array of object values.
+      //console.log(productsArrayKeys);
+      clearList();
+      for (let product of productsArrayEnteries) {
+        insertProducts(product, loggedInUser);
+      }
+    });
+  }, 0);
+});
+//signing out functionality
+logout.addEventListener("click", (event) => {
+  event.preventDefault();
+  auth.signOut().then(() => {
+    document.getElementById("user-sign-out").style.display = "block";
+    setTimeout(function () {
+      document.getElementById("user-sign-out").style.display = "none";
+    }, 3000);
+  });
+});
 
 //Logic to insert products into the UI
 function insertProducts(products, loggedInUser) {
@@ -81,19 +121,17 @@ add.addEventListener("click", () => {
     loggedInUser = user.uid;
   });
   setTimeout(function () {
-    console.log(loggedInUser);
     const productsInDB = ref(database, `products/${loggedInUser}`);
     push(productsInDB, productsVal);
 
     //fetching data from firebase DB
     onValue(productsInDB, function (snapshot) {
       //If our db got empty, we deleted all elements, then our snapshot will not exist.
-      // console.log(Object.entries(snapshot.val()));
       if (!snapshot.exists()) {
         list.innerHTML = "No items here...yet";
         return;
       }
-      //console.log(loggedInUser);
+
       let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
       //let productsArrayKeys = Object.keys(snapshot.val()); //convert object to array of object keys.
       //let productsArrayValues = Object.Values(snapshot.val()); //convert object to array of object values.
