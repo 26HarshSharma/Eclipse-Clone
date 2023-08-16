@@ -34,48 +34,8 @@ let list = document.getElementById("list");
 const logout = document.getElementById("logout");
 const show = document.getElementById("show");
 
-show.addEventListener("click", () => {
-  let loggedInUser;
-  auth.onAuthStateChanged((user) => {
-    if (user === null) return;
-    loggedInUser = user.uid;
-  });
-  setTimeout(function () {
-    const productsInDB = ref(database, `products/${loggedInUser}`);
-
-    //fetching data from firebase DB
-    onValue(productsInDB, function (snapshot) {
-      //If our db got empty, we deleted all elements, then our snapshot will not exist.
-      if (!snapshot.exists()) {
-        list.innerHTML = "No items here...yet";
-        return;
-      }
-
-      let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
-      //let productsArrayKeys = Object.keys(snapshot.val()); //convert object to array of object keys.
-      //let productsArrayValues = Object.Values(snapshot.val()); //convert object to array of object values.
-      //console.log(productsArrayKeys);
-      clearList();
-      for (let product of productsArrayEnteries) {
-        insertProducts(product, loggedInUser);
-      }
-    });
-  }, 0);
-});
-//signing out functionality
-logout.addEventListener("click", (event) => {
-  event.preventDefault();
-  auth.signOut().then(() => {
-    document.getElementById("user-sign-out").style.display = "block";
-    setTimeout(function () {
-      document.getElementById("user-sign-out").style.display = "none";
-    }, 3000);
-  });
-});
-
 //Logic to insert products into the UI
 function insertProducts(products, loggedInUser) {
-  //console.log(loggedInUser);
   let productId = products[0];
   let productVal = products[1];
   let listItem = document.createElement("li");
@@ -104,6 +64,37 @@ function clearList() {
   list.innerHTML = "";
 }
 
+//show button event listener
+show.addEventListener("click", () => {
+  let loggedInUser;
+  auth.onAuthStateChanged((user) => {
+    if (user === null) return;
+    loggedInUser = user.uid; //fetching logged in user ID.
+  });
+  setTimeout(function () {
+    const productsInDB = ref(database, `products/${loggedInUser}`);
+
+    //fetching data from firebase DB
+    onValue(productsInDB, function (snapshot) {
+      //If our db got empty, we deleted all elements, then our snapshot will not exist.
+      if (!snapshot.exists()) {
+        list.innerHTML = "No items here...yet";
+        return;
+      }
+
+      let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
+      //let productsArrayKeys = Object.keys(snapshot.val()); //convert object to array of object keys.
+      //let productsArrayValues = Object.Values(snapshot.val()); //convert object to array of object values.
+      //console.log(productsArrayKeys);
+      clearList();
+      for (let product of productsArrayEnteries) {
+        insertProducts(product, loggedInUser);
+      }
+    });
+  }, 0);
+});
+
+//Add button event listener
 add.addEventListener("click", () => {
   const productsVal = products.value;
   if (productsVal === "") {
@@ -114,14 +105,17 @@ add.addEventListener("click", () => {
     return;
   }
   clearInputField();
-  //pushing items to DB (firebase)
+
   let loggedInUser;
   auth.onAuthStateChanged((user) => {
     if (user === null) return;
     loggedInUser = user.uid;
   });
   setTimeout(function () {
+    //getting the DB referrence (exact location where we need to store data)
     const productsInDB = ref(database, `products/${loggedInUser}`);
+
+    //pushing items to DB (firebase)
     push(productsInDB, productsVal);
 
     //fetching data from firebase DB
@@ -143,6 +137,7 @@ add.addEventListener("click", () => {
     });
   }, 0);
 });
+
 //signing out functionality
 logout.addEventListener("click", (event) => {
   event.preventDefault();
@@ -153,12 +148,14 @@ logout.addEventListener("click", (event) => {
     }, 3000);
   });
 });
+
 //user status (logged in or logged out)
 auth.onAuthStateChanged((user) => {
   if (user === null) {
     list.style.display = "none";
     add.style.display = "none";
     products.style.display = "none";
+    show.style.display = "none";
     const p = document.createElement("p");
     p.textContent = "Please login to add or see products :)";
     document.getElementsByClassName("products-list")[0].append(p);
@@ -171,9 +168,9 @@ auth.onAuthStateChanged((user) => {
     add.style.display = "inline";
     products.style.display = "block";
     logout.style.display = "block";
+    show.style.display = "inline";
 
     document.getElementById("login").style.display = "none";
     document.getElementById("signUp").style.display = "none";
   }
-  // console.log(user.uid);
 });

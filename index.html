@@ -31,6 +31,13 @@
   </head>
   <body>
     <header>
+      <div
+        id="user-sign-out"
+        class="alert alert-success rounded-0"
+        role="alert"
+      >
+        Sign Out Successful
+      </div>
       <nav class="navbar bg-body-tertiary">
         <form class="container-fluid justify-content-start">
           <a
@@ -48,23 +55,21 @@
           </a>
         </form>
       </nav>
-      <div id="user-sign-out" class="alert alert-success" role="alert">
-        Sign Out Successful
-      </div>
     </header>
     <main>
-      <div class="alert alert-danger disp" role="alert">
-        Product field cannot be empty!
-      </div>
       <section class="main-container">
         <div class="cute-cat">
           <img src="assets/Optimized-cat.jpg" alt="A cute cat" />
         </div>
         <div class="products-container">
+          <div class="alert alert-danger disp rounded-0" role="alert">
+            Product field cannot be empty!
+          </div>
           <div class="input-group mb-3 w-75 mx-auto border border-dark rounded">
             <span class="input-group-text" id="inputGroup-sizing-default"
               >Products</span
             >
+
             <input
               type="text"
               class="form-control"
@@ -74,8 +79,8 @@
               id="products"
             />
           </div>
-          <a href="#" id="add" class="btn btn-outline-success me-2 mb-2">Add</a>
-          <a href="#" id="show" class="btn btn-outline-primary">Show</a>
+          <a id="add" class="btn btn-outline-success me-2 mb-2">Add</a>
+          <a id="show" class="btn btn-outline-primary">Show</a>
         </div>
         <div style="text-align: center" class="products-list">
           <ul id="list"></ul>
