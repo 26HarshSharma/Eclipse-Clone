@@ -35,23 +35,23 @@ const logout = document.getElementById("logout");
 const show = document.getElementById("show");
 
 //Logic to insert products into the UI
-function insertProducts(products, loggedInUser) {
+function insertProducts(products, loggedInUserId) {
   let productId = products[0];
   let productVal = products[1];
   let listItem = document.createElement("li");
   listItem.textContent = `${productVal}`;
   listItem.classList.add("list-items");
   listItem.addEventListener("click", () =>
-    removeProducts(productId, loggedInUser)
+    removeProducts(productId, loggedInUserId)
   );
   list.append(listItem);
 }
 
 //deleting elemets from DB
-let removeProducts = (productId, loggedInUser) => {
+let removeProducts = (productId, loggedInUserId) => {
   let exactLocationOfProductsInDB = ref(
     database,
-    `products/${loggedInUser}/${productId}`
+    `products/${loggedInUserId}/${productId}`
   );
   remove(exactLocationOfProductsInDB);
 };
@@ -64,15 +64,19 @@ function clearList() {
   list.innerHTML = "";
 }
 
-//show button event listener
-show.addEventListener("click", () => {
-  let loggedInUser;
+//Main code to fetch items from DB and Push into the DB (*NOTE - Very Important!)
+function loggedInUser(productsVal) {
+  let loggedInUserId;
   auth.onAuthStateChanged((user) => {
     if (user === null) return;
-    loggedInUser = user.uid; //fetching logged in user ID.
+    loggedInUserId = user.uid;
   });
   setTimeout(function () {
-    const productsInDB = ref(database, `products/${loggedInUser}`);
+    //getting the DB referrence (exact location where we need to store data)
+    const productsInDB = ref(database, `products/${loggedInUserId}`);
+
+    //pushing items to DB (firebase)
+    if (productsVal !== "") push(productsInDB, productsVal);
 
     //fetching data from firebase DB
     onValue(productsInDB, function (snapshot) {
@@ -88,10 +92,15 @@ show.addEventListener("click", () => {
       //console.log(productsArrayKeys);
       clearList();
       for (let product of productsArrayEnteries) {
-        insertProducts(product, loggedInUser);
+        insertProducts(product, loggedInUserId);
       }
     });
   }, 0);
+}
+
+//show button event listener
+show.addEventListener("click", () => {
+  loggedInUser("");
 });
 
 //Add button event listener
@@ -105,37 +114,7 @@ add.addEventListener("click", () => {
     return;
   }
   clearInputField();
-
-  let loggedInUser;
-  auth.onAuthStateChanged((user) => {
-    if (user === null) return;
-    loggedInUser = user.uid;
-  });
-  setTimeout(function () {
-    //getting the DB referrence (exact location where we need to store data)
-    const productsInDB = ref(database, `products/${loggedInUser}`);
-
-    //pushing items to DB (firebase)
-    push(productsInDB, productsVal);
-
-    //fetching data from firebase DB
-    onValue(productsInDB, function (snapshot) {
-      //If our db got empty, we deleted all elements, then our snapshot will not exist.
-      if (!snapshot.exists()) {
-        list.innerHTML = "No items here...yet";
-        return;
-      }
-
-      let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
-      //let productsArrayKeys = Object.keys(snapshot.val()); //convert object to array of object keys.
-      //let productsArrayValues = Object.Values(snapshot.val()); //convert object to array of object values.
-      //console.log(productsArrayKeys);
-      clearList();
-      for (let product of productsArrayEnteries) {
-        insertProducts(product, loggedInUser);
-      }
-    });
-  }, 0);
+  loggedInUser(productsVal);
 });
 
 //signing out functionality
