@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="/backend/auth.js" defer></script>
     <link rel="stylesheet" href="/public/auth.css" />
-    <title>login page</title>
+    <title>sign up page</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -15,22 +15,11 @@
   </head>
   <body>
     <header>
-      <div
-        id="user-loggedin"
-        class="alert alert-success rounded-0"
-        role="alert"
-      >
-        Logged In!
+      <div id="user-created" class="alert alert-success rounded-0" role="alert">
+        User Successfully created!
       </div>
-      <div id="user-invalid" class="alert alert-danger rounded-0" role="alert">
-        User not found, Please sign-up!
-      </div>
-      <div
-        id="user-invalid-password"
-        class="alert alert-danger rounded-0"
-        role="alert"
-      >
-        password not correct!
+      <div id="user-exists" class="alert alert-danger rounded-0" role="alert">
+        User already exists, please login!
       </div>
     </header>
     <main
@@ -46,16 +35,16 @@
         class="w-50 mx-auto border border-dark p-4"
       >
         <h1 style="text-decoration: underline; margin-bottom: 18px">
-          Login Form
+          SignUp Form
         </h1>
         <div class="mb-3">
-          <label for="exampleInputEmail2" class="form-label"
+          <label for="exampleInputEmail1" class="form-label"
             >Email address</label
           >
           <input
             type="email"
             class="form-control border border-dark"
-            id="exampleInputEmail2"
+            id="exampleInputEmail1"
             aria-describedby="emailHelp"
             required
             name="email"
@@ -65,25 +54,27 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="exampleInputPassword2" class="form-label">Password</label>
+          <label for="exampleInputPassword1" class="form-label">Password</label>
           <input
             type="password"
             class="form-control border border-dark"
-            id="exampleInputPassword2"
+            id="exampleInputPassword1"
             required
             name="password"
           />
         </div>
+        <button type="submit" class="btn btn-primary" id="sign-up">
+          Submit
+        </button>
+        <a href="../index.html" class="btn btn-primary">Home</a>
         <button
           style="display: none"
           type="submit"
           class="btn btn-primary"
-          id="sign-up"
+          id="log-in"
         >
           Dummy
         </button>
-        <button type="submit" class="btn btn-primary" id="log-in">Login</button>
-        <a href="index.html" class="btn btn-primary">Home</a>
       </form>
     </main>
   </body>
