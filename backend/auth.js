@@ -1,14 +1,22 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-storage.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-analytics.js";
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signOut,
   signInWithEmailAndPassword,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -24,34 +32,53 @@ const firebaseConfig = {
   measurementId: "G-XQP42QYYH5",
 };
 
-// Initialize Firebase
+// Initialize Firebase Services
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
+const storage = getStorage();
+const fireDB = getFirestore();
+let storageRef;
+
+//collection referrence:
+const colref = collection(fireDB, "customer");
 
 //my initializations
 const signup = document.getElementById("sign-up");
 const login = document.getElementById("log-in");
+let getFile = document.getElementById("pic");
+let file;
+
+//getting the profile pic
+getFile.addEventListener("change", (event) => {
+  file = event.target.files[0];
+});
 
 signup.addEventListener("click", (event) => {
   event.preventDefault();
   let email = document.getElementById("exampleInputEmail1").value;
   let password = document.getElementById("exampleInputPassword1").value;
+  let username = document.getElementById("name").value;
+  let user;
   document.getElementById("exampleInputEmail1").value = "";
   document.getElementById("exampleInputPassword1").value = "";
+  document.getElementById("name").value = "";
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
-      const user = userCredential.user;
+      user = userCredential.user.uid;
+
       document.getElementById("user-created").style.display = "block";
       setTimeout(function () {
         document.getElementById("user-created").style.display = "none";
       }, 3000);
+      //calling a function to upload profile-pic to firebase storage with name = userid
+      store(user);
+      addCustomer(user, username);
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      //   alert(errorMessage);
       if (errorCode == "auth/email-already-in-use") {
         document.getElementById("user-exists").style.display = "block";
         setTimeout(function () {
@@ -59,7 +86,27 @@ signup.addEventListener("click", (event) => {
         }, 3000);
       }
     });
+  getFile.value = "";
 });
+
+//adding a customer details to firestore DB
+async function addCustomer(user, username) {
+  addDoc(colref, {
+    id: user,
+    Name: username,
+  });
+}
+
+//For uploading profile-pic to firebase cloud storage.
+async function store(user) {
+  try {
+    storageRef = ref(storage, `images/${user}`);
+    await uploadBytes(storageRef, file);
+    console.log("File uploaded successfully.");
+  } catch (error) {
+    console.error("Error uploading file:", error);
+  }
+}
 
 login.addEventListener("click", (event) => {
   event.preventDefault();
@@ -67,7 +114,6 @@ login.addEventListener("click", (event) => {
   let password = document.getElementById("exampleInputPassword2").value;
   document.getElementById("exampleInputEmail2").value = "";
   document.getElementById("exampleInputPassword2").value = "";
-  console.log("here!");
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
@@ -97,4 +143,15 @@ login.addEventListener("click", (event) => {
     });
 });
 
-//listen for authentication changes
+//get collection data:
+/*
+getDocs(colref)
+  .then((snapshot) => {
+    let customers = [];
+    snapshot.docs.forEach((doc) => {
+      customers.push({ ...doc.data(), id: doc.id });
+    });
+    console.log(customers);
+  })
+  .catch((error) => console.log(error.message));
+*/

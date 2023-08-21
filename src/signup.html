@@ -27,16 +27,39 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 80vh;
+        height: 100vh;
       "
     >
       <form
         style="min-width: 325px"
         class="w-50 mx-auto border border-dark p-4"
+        enctype="multipart/form-data"
       >
         <h1 style="text-decoration: underline; margin-bottom: 18px">
           SignUp Form
         </h1>
+        <div class="mb-3">
+          <label for="pic" class="form-label">Profile Pic</label>
+          <input
+            type="file"
+            class="form-control border border-dark"
+            id="pic"
+            required
+            accept="image/*"
+            name="pic"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control border border-dark"
+            id="name"
+            aria-describedby="emailHelp"
+            name="name"
+            required
+          />
+        </div>
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label"
             >Email address</label

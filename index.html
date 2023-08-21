@@ -24,26 +24,37 @@
       >
         Sign Out Successful
       </div>
-      <nav class="navbar bg-body-tertiary">
-        <form class="container-fluid justify-content-start">
+      <nav
+        style="
+          display: flex;
+
+          align-items: center;
+          justify-content: space-between;
+        "
+        class="navbar bg-body-tertiary"
+      >
+        <div class="d-flex">
           <a
             href="/src/signup.html"
             id="signUp"
-            class="btn btn-outline-success me-2"
+            class="btn btn-outline-success mx-2"
           >
             Sign Up
           </a>
-          <a href="#" id="logout" class="btn btn-outline-success me-2">
+          <a href="#" id="logout" class="btn btn-outline-success mx-2">
             Sign Out
           </a>
           <a
             href="/src/login.html"
             id="login"
-            class="btn btn-outline-success me-2"
+            class="btn btn-outline-success mx-2"
           >
             Login
           </a>
-        </form>
+        </div>
+        <div>
+          <a class="btn btn-outline-primary mx-2" id="profile-name"></a>
+        </div>
       </nav>
     </header>
     <main>
@@ -70,7 +81,7 @@
             />
           </div>
           <a id="add" class="btn btn-outline-success me-2 mb-2">Add</a>
-          <a id="show" class="btn btn-outline-primary">Show</a>
+          <!-- <a id="show" class="btn btn-outline-primary">Show</a> -->
         </div>
         <div style="text-align: center" class="products-list">
           <ul id="list"></ul>

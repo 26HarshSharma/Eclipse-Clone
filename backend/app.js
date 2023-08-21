@@ -11,6 +11,14 @@ import {
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+
 const appSettings = {
   databaseURL:
     "https://fir-38a44-default-rtdb.europe-west1.firebasedatabase.app/",
@@ -27,12 +35,14 @@ const appSettings = {
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const auth = getAuth();
+const fireDB = getFirestore();
+const colref = collection(fireDB, "customer");
 
 const products = document.getElementById("products");
 const add = document.getElementById("add");
 let list = document.getElementById("list");
 const logout = document.getElementById("logout");
-const show = document.getElementById("show");
+// const show = document.getElementById("show");
 
 //Logic to insert products into the UI
 function insertProducts(products, loggedInUserId) {
@@ -65,11 +75,12 @@ function clearList() {
 }
 
 //Main code to fetch items from DB and Push into the DB (*NOTE - Very Important!)
-function loggedInUser(productsVal) {
+function loggedInUser(productsVal, flag) {
   let loggedInUserId;
   auth.onAuthStateChanged((user) => {
     if (user === null) return;
     loggedInUserId = user.uid;
+    if (flag) profile(loggedInUserId);
   });
   setTimeout(function () {
     //getting the DB referrence (exact location where we need to store data)
@@ -87,9 +98,7 @@ function loggedInUser(productsVal) {
       }
 
       let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
-      //let productsArrayKeys = Object.keys(snapshot.val()); //convert object to array of object keys.
-      //let productsArrayValues = Object.Values(snapshot.val()); //convert object to array of object values.
-      //console.log(productsArrayKeys);
+
       clearList();
       for (let product of productsArrayEnteries) {
         insertProducts(product, loggedInUserId);
@@ -98,10 +107,31 @@ function loggedInUser(productsVal) {
   }, 0);
 }
 
+//profile
+loggedInUser("", true);
+async function profile(loggedInUserId) {
+  const q = query(colref, where("id", "==", `${loggedInUserId}`));
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.length === 0) {
+    return;
+  }
+  querySnapshot.forEach((doc) => {
+    try {
+      // doc.data() is never undefined for query doc snapshots
+      document.getElementById("profile-name").style.display = "block";
+      document.getElementById("profile-name").textContent = doc.data().Name;
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  });
+}
+
 //show button event listener
+/*
 show.addEventListener("click", () => {
-  loggedInUser("");
+  loggedInUser("", false);
 });
+*/
 
 //Add button event listener
 add.addEventListener("click", () => {
@@ -114,7 +144,7 @@ add.addEventListener("click", () => {
     return;
   }
   clearInputField();
-  loggedInUser(productsVal);
+  loggedInUser(productsVal, false);
 });
 
 //signing out functionality
@@ -134,7 +164,8 @@ auth.onAuthStateChanged((user) => {
     list.style.display = "none";
     add.style.display = "none";
     products.style.display = "none";
-    show.style.display = "none";
+    // show.style.display = "none";
+    document.getElementById("profile-name").style.display = "none";
     const p = document.createElement("p");
     p.textContent = "Please login to add or see products :)";
     document.getElementsByClassName("products-list")[0].append(p);
@@ -147,9 +178,10 @@ auth.onAuthStateChanged((user) => {
     add.style.display = "inline";
     products.style.display = "block";
     logout.style.display = "block";
-    show.style.display = "inline";
+    // show.style.display = "inline";
 
     document.getElementById("login").style.display = "none";
     document.getElementById("signUp").style.display = "none";
+    loggedInUser("", true, user.uid);
   }
 });
