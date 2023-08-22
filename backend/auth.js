@@ -4,6 +4,7 @@ import {
   getStorage,
   ref,
   uploadBytes,
+  getDownloadURL,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-storage.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-analytics.js";
 import {
@@ -48,12 +49,14 @@ const signup = document.getElementById("sign-up");
 const login = document.getElementById("log-in");
 let getFile = document.getElementById("pic");
 let file;
+let profileDownloadURL = "";
 
 //getting the profile pic
 getFile.addEventListener("change", (event) => {
   file = event.target.files[0];
 });
 
+//signup logic
 signup.addEventListener("click", (event) => {
   event.preventDefault();
   let email = document.getElementById("exampleInputEmail1").value;
@@ -102,11 +105,17 @@ async function store(user) {
   try {
     storageRef = ref(storage, `images/${user}`);
     await uploadBytes(storageRef, file);
+    getDownloadURL(storageRef).then((url) => {
+      profileDownloadURL = url;
+      console.log(url);
+    });
     console.log("File uploaded successfully.");
   } catch (error) {
     console.error("Error uploading file:", error);
   }
 }
+
+// export { profileDownloadURL };
 
 login.addEventListener("click", (event) => {
   event.preventDefault();

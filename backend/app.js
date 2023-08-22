@@ -10,7 +10,6 @@ import {
   getAuth,
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-
 import {
   getFirestore,
   collection,
@@ -42,7 +41,6 @@ const products = document.getElementById("products");
 const add = document.getElementById("add");
 let list = document.getElementById("list");
 const logout = document.getElementById("logout");
-// const show = document.getElementById("show");
 
 //Logic to insert products into the UI
 function insertProducts(products, loggedInUserId) {
@@ -80,7 +78,9 @@ function loggedInUser(productsVal, flag) {
   auth.onAuthStateChanged((user) => {
     if (user === null) return;
     loggedInUserId = user.uid;
-    if (flag) profile(loggedInUserId);
+    if (flag) {
+      profile(loggedInUserId);
+    }
   });
   setTimeout(function () {
     //getting the DB referrence (exact location where we need to store data)
@@ -126,13 +126,6 @@ async function profile(loggedInUserId) {
   });
 }
 
-//show button event listener
-/*
-show.addEventListener("click", () => {
-  loggedInUser("", false);
-});
-*/
-
 //Add button event listener
 add.addEventListener("click", () => {
   const productsVal = products.value;
@@ -155,6 +148,7 @@ logout.addEventListener("click", (event) => {
     setTimeout(function () {
       document.getElementById("user-sign-out").style.display = "none";
     }, 3000);
+    document.getElementById("pro-pic").style.display = "none";
   });
 });
 
@@ -164,7 +158,6 @@ auth.onAuthStateChanged((user) => {
     list.style.display = "none";
     add.style.display = "none";
     products.style.display = "none";
-    // show.style.display = "none";
     document.getElementById("profile-name").style.display = "none";
     const p = document.createElement("p");
     p.textContent = "Please login to add or see products :)";
@@ -178,7 +171,6 @@ auth.onAuthStateChanged((user) => {
     add.style.display = "inline";
     products.style.display = "block";
     logout.style.display = "block";
-    // show.style.display = "inline";
 
     document.getElementById("login").style.display = "none";
     document.getElementById("signUp").style.display = "none";

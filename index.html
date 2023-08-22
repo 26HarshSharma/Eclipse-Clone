@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="/assets/favicon.ico" />
 
     <link rel="stylesheet" href="/public/style.css" />
+    <script src="/backend/profilePic.js" type="module" defer></script>
     <script src="/backend/app.js" type="module" defer></script>
     <title>kitycart</title>
     <link
@@ -52,8 +53,9 @@
             Login
           </a>
         </div>
-        <div>
+        <div id="profile-section">
           <a class="btn btn-outline-primary mx-2" id="profile-name"></a>
+          <img alt="profile-pic" id="pro-pic" />
         </div>
       </nav>
     </header>
@@ -81,7 +83,6 @@
             />
           </div>
           <a id="add" class="btn btn-outline-success me-2 mb-2">Add</a>
-          <!-- <a id="show" class="btn btn-outline-primary">Show</a> -->
         </div>
         <div style="text-align: center" class="products-list">
           <ul id="list"></ul>
