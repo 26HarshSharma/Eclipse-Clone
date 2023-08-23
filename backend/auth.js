@@ -68,7 +68,7 @@ signup.addEventListener("click", (event) => {
   document.getElementById("exampleInputPassword1").value = "";
   document.getElementById("name").value = "";
   document.getElementById("address").value = "";
-  document.getElementById("contact-number") = "";
+  document.getElementById("contact-number").value = "";
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
@@ -137,7 +137,6 @@ login.addEventListener("click", (event) => {
     })
     .catch((error) => {
       const errorCode = error.code;
-      const errorMessage = error.message;
       if (errorCode == "auth/user-not-found") {
         document.getElementById("user-invalid").style.display = "block";
         setTimeout(function () {
