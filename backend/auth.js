@@ -15,7 +15,6 @@ import {
 import {
   getFirestore,
   collection,
-  getDocs,
   addDoc,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
@@ -62,10 +61,14 @@ signup.addEventListener("click", (event) => {
   let email = document.getElementById("exampleInputEmail1").value;
   let password = document.getElementById("exampleInputPassword1").value;
   let username = document.getElementById("name").value;
+  let address = document.getElementById("address").value;
+  let contactNumber = document.getElementById("contact-number").value;
   let user;
   document.getElementById("exampleInputEmail1").value = "";
   document.getElementById("exampleInputPassword1").value = "";
   document.getElementById("name").value = "";
+  document.getElementById("address").value = "";
+  document.getElementById("contact-number") = "";
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
@@ -77,11 +80,11 @@ signup.addEventListener("click", (event) => {
       }, 3000);
       //calling a function to upload profile-pic to firebase storage with name = userid
       store(user);
-      addCustomer(user, username);
+      // calling a function to upload customer data to firestore DB
+      addCustomer(user, username, contactNumber, address);
     })
     .catch((error) => {
       const errorCode = error.code;
-      const errorMessage = error.message;
       if (errorCode == "auth/email-already-in-use") {
         document.getElementById("user-exists").style.display = "block";
         setTimeout(function () {
@@ -93,10 +96,12 @@ signup.addEventListener("click", (event) => {
 });
 
 //adding a customer details to firestore DB
-async function addCustomer(user, username) {
+async function addCustomer(user, username, contact, address) {
   addDoc(colref, {
     id: user,
     Name: username,
+    Contact: contact,
+    Address: address,
   });
 }
 
@@ -114,8 +119,6 @@ async function store(user) {
     console.error("Error uploading file:", error);
   }
 }
-
-// export { profileDownloadURL };
 
 login.addEventListener("click", (event) => {
   event.preventDefault();
@@ -151,16 +154,3 @@ login.addEventListener("click", (event) => {
       }
     });
 });
-
-//get collection data:
-/*
-getDocs(colref)
-  .then((snapshot) => {
-    let customers = [];
-    snapshot.docs.forEach((doc) => {
-      customers.push({ ...doc.data(), id: doc.id });
-    });
-    console.log(customers);
-  })
-  .catch((error) => console.log(error.message));
-*/

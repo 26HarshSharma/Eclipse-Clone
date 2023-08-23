@@ -24,8 +24,8 @@ const auth = getAuth();
 const storage = getStorage();
 let storageRef;
 
-let profileDownloadURL;
 let loggedInUserId;
+let loggedInUserEmail;
 
 const profilePic = document.getElementById("pro-pic");
 
@@ -43,7 +43,7 @@ async function getUserPic(loggedInUserId) {
       if (url !== "") {
         profilePic.style.display = "block";
         profilePic.setAttribute("src", url);
-        profilePic.style.borderRadius = "50%";
+        // profilePic.style.borderRadius = "50%";
       }
     });
   } catch (error) {

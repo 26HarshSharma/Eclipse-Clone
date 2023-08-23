@@ -6,10 +6,7 @@ import {
   onValue,
   remove,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
-import {
-  getAuth,
-  signOut,
-} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import {
   getFirestore,
   collection,
@@ -126,7 +123,7 @@ async function profile(loggedInUserId) {
   });
 }
 
-//Add button event listener
+//Add button event listener, adding products to realtime DB
 add.addEventListener("click", () => {
   const productsVal = products.value;
   if (productsVal === "") {
