@@ -1,1 +1,0 @@
-const loader=document.getElementById("preloader"),loaderContainer=document.getElementById("loader-container");window.addEventListener("load",()=>{loader.style.display="none",loaderContainer.style.display="none"});
