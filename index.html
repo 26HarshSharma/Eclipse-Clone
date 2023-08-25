@@ -1,97 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/assets/favicon.ico" />
-
-    <link rel="stylesheet" href="/public/style.css" />
-    <script src="/backend/profilePic.js" type="module" defer></script>
-    <script src="/backend/app.js" type="module" defer></script>
-    <title>kitycart</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <header>
-      <div
-        id="user-sign-out"
-        class="alert alert-success rounded-0"
-        role="alert"
-      >
-        Sign Out Successful
-      </div>
-      <nav
-        style="
-          display: flex;
-
-          align-items: center;
-          justify-content: space-between;
-        "
-        class="navbar bg-body-tertiary"
-      >
-        <div class="d-flex">
-          <a
-            href="/src/signup.html"
-            id="signUp"
-            class="btn btn-outline-success mx-2"
-          >
-            Sign Up
-          </a>
-          <a href="#" id="logout" class="btn btn-outline-success mx-2">
-            Sign Out
-          </a>
-          <a
-            href="/src/login.html"
-            id="login"
-            class="btn btn-outline-success me-2"
-          >
-            Login
-          </a>
-        </div>
-        <div id="profile-section">
-          <a
-            href="/src/profile.html"
-            class="btn btn-outline-primary me-2"
-            id="profile-name"
-          ></a>
-          <img class="mx-2" alt="profile-pic" id="pro-pic" />
-        </div>
-      </nav>
-    </header>
-    <main>
-      <section class="main-container">
-        <div class="cute-cat">
-          <img src="/assets/Optimized-cat.jpg" alt="A cute cat" />
-        </div>
-        <div class="products-container">
-          <div class="alert alert-danger disp rounded-0" role="alert">
-            Product field cannot be empty!
-          </div>
-          <div class="input-group mb-3 w-75 mx-auto border border-dark rounded">
-            <span class="input-group-text" id="inputGroup-sizing-default"
-              >Products</span
-            >
-
-            <input
-              type="text"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-default"
-              name="products"
-              id="products"
-            />
-          </div>
-          <a id="add" class="btn btn-outline-success me-2 mb-2">Add</a>
-        </div>
-        <div style="text-align: center" class="products-list">
-          <ul id="list"></ul>
-        </div>
-      </section>
-    </main>
-  </body>
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<link rel=icon type=image/png href=/assets/favicon.ico>
+<link rel=stylesheet href=/public/style.css>
+<script src=/backend/profilePic.js type=module defer></script>
+<script src=/backend/app.js type=module defer></script>
+<title>kitycart</title>
+<link href=https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css rel=stylesheet integrity=sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9 crossorigin=anonymous>
+</head>
+<body>
+<header>
+<div id=user-sign-out class="alert alert-success rounded-0" role=alert>
+Sign Out Successful
+</div>
+<nav style=display:flex;align-items:center;justify-content:space-between class="navbar bg-body-tertiary">
+<div class=d-flex>
+<a href=/src/signup.html id=signUp class="btn btn-outline-success mx-2">
+Sign Up
+</a>
+<a href=# id=logout class="btn btn-outline-success mx-2">
+Sign Out
+</a>
+<a href=/src/login.html id=login class="btn btn-outline-success me-2">
+Login
+</a>
+</div>
+<div id=profile-section>
+<a href=/src/profile.html class="btn btn-outline-primary me-2" id=profile-name></a>
+<img class=mx-2 alt=profile-pic id=pro-pic>
+</div>
+</nav>
+</header>
+<main>
+<section class=main-container>
+<div class=cute-cat>
+<img src=/assets/Optimized-cat.jpg alt="A cute cat">
+</div>
+<div class=products-container>
+<div class="alert alert-danger disp rounded-0" role=alert>
+Product field cannot be empty!
+</div>
+<div class="input-group mb-3 w-75 mx-auto border border-dark rounded">
+<span class=input-group-text id=inputGroup-sizing-default>Products</span>
+<input class=form-control aria-label="Sizing example input" aria-describedby=inputGroup-sizing-default name=products id=products>
+</div>
+<a id=add class="btn btn-outline-success me-2 mb-2">Add</a>
+</div>
+<div style=text-align:center class=products-list>
+<ul id=list></ul>
+</div>
+</section>
+</main>
+</body>
 </html>
