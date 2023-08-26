@@ -11,6 +11,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import {
   getFirestore,
@@ -46,9 +47,9 @@ const colref = collection(fireDB, "customer");
 //my initializations
 const signup = document.getElementById("sign-up");
 const login = document.getElementById("log-in");
+
 let getFile = document.getElementById("pic");
 let file;
-let profileDownloadURL = "";
 
 //getting the profile pic
 getFile.addEventListener("change", (event) => {
@@ -153,3 +154,4 @@ login.addEventListener("click", (event) => {
       }
     });
 });
+
