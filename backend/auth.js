@@ -107,13 +107,14 @@ async function addCustomer(user, username, contact, address) {
 }
 
 //For uploading profile-pic to firebase cloud storage.
+let profileDownloadURL;
 async function store(user) {
   try {
     storageRef = ref(storage, `images/${user}`);
     await uploadBytes(storageRef, file);
     getDownloadURL(storageRef).then((url) => {
+      
       profileDownloadURL = url;
-      console.log(url);
     });
     console.log("File uploaded successfully.");
   } catch (error) {

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="/backend/auth.js" defer></script>
+    <script type="module" src="/backend/updateProfile.js" defer></script>
     <link rel="stylesheet" href="/public/auth.css" />
     <title>sign up page</title>
     <link
@@ -14,15 +14,12 @@
     />
   </head>
   <body>
-    <!-- <div id="loader-container">
-      <span class="loader" id="preloader"></span>
-    </div> -->
     <header>
-      <div id="user-created" class="alert alert-success rounded-0" role="alert">
-        User Successfully created!
+      <div id="user-updated" class="alert alert-success rounded-0" role="alert">
+        Updation Successfull!
       </div>
-      <div id="user-exists" class="alert alert-danger rounded-0" role="alert">
-        User already exists, please login!
+      <div id="empty-field" class="alert alert-danger rounded-0" role="alert">
+        Fields cannot be empty!
       </div>
     </header>
     <main
@@ -31,6 +28,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100vh;
       "
     >
       <form
@@ -39,7 +37,7 @@
         enctype="multipart/form-data"
       >
         <h1 style="text-decoration: underline; margin-bottom: 18px">
-          SignUp Form
+          Update Form
         </h1>
         <div class="mb-3">
           <label for="pic" class="form-label">Profile Pic</label>
@@ -52,6 +50,7 @@
             name="pic"
           />
         </div>
+        <div class="mb-3"></div>
         <div class="mb-3">
           <label for="name" class="form-label">Name</label>
           <input
@@ -78,40 +77,14 @@
           <textarea
             type="text"
             class="form-control border border-dark"
-            id="address"
+            id="home-address"
             name="address"
             required
           ></textarea>
         </div>
-        <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label"
-            >Email address</label
-          >
-          <input
-            type="email"
-            class="form-control border border-dark"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            required
-            name="email"
-          />
-          <div id="emailHelp" class="form-text">
-            We'll never share your email with anyone else.
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input
-            type="password"
-            class="form-control border border-dark"
-            id="exampleInputPassword1"
-            required
-            name="password"
-          />
-        </div>
 
-        <button type="submit" class="btn btn-primary" id="sign-up">
-          Submit
+        <button type="submit" class="btn btn-primary" id="update-btn">
+          Update
         </button>
         <a href="../index.html" class="btn btn-primary">Home</a>
         <button
