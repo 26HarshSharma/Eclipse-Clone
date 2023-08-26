@@ -17,3 +17,7 @@
 #user-invalid-password {
   display: none;
 }
+
+#empty-field {
+  display: none;
+}

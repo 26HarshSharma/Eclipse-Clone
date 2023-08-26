@@ -26,6 +26,12 @@ const forgetPasswordBtn = document.getElementById("forget-password");
 forgetPasswordBtn.addEventListener("click", (event) => {
   event.preventDefault();
   let email = document.getElementById("forget-password-email").value;
+  if (email === "") {
+    document.getElementById("empty-field").style.display = "block";
+    setTimeout(function () {
+      document.getElementById("empty-field").style.display = "none";
+    }, 3000);
+  }
   sendPasswordResetEmail(auth, email)
     .then(() => {
       alert("Password reset email sent!");
@@ -33,11 +39,11 @@ forgetPasswordBtn.addEventListener("click", (event) => {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      if(errorCode == "auth/user-not-found") {
+      if (errorCode == "auth/user-not-found") {
         document.getElementById("user-invalid").style.display = "block";
         setTimeout(function () {
-            document.getElementById("user-invalid").style.display = "none";
-          }, 3000);
+          document.getElementById("user-invalid").style.display = "none";
+        }, 3000);
       }
     });
 });
