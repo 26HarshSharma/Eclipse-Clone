@@ -7,7 +7,6 @@
 body {
   background: #daa000;
   font-family: "Montserrat", sans-serif;
-  overflow: hidden;
 }
 .wrapper {
   display: flex;
