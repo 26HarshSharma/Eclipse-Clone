@@ -120,7 +120,7 @@ footer .copyright {
 }
 
 /* media queries */
-@media only screen and (min-width: 735px){
+@media only screen and (min-width: 689px){
 	header {
         display: flex;
         height: 99vh;
@@ -147,11 +147,14 @@ footer .copyright {
     header .header-left p {
         padding: 22px;
         font-size: 22px;
+        margin-top: 0;
+        margin-bottom: 0;
     }
     header .header-left h1 {
         text-align: left;
         margin-left: 32px;
         font-size: 38px;
+        margin-bottom: 0;
     }
     .btn {
         font-size: 24px;
