@@ -160,10 +160,29 @@ footer .copyright {
         font-size: 24px;
         width: 50%;
     }
+    main .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      justify-content: center;
+      /* align-items: center; */
+    }
+    main .cards .card-container {
+      width: 45%;
+      margin: 0;
+      justify-content: flex-start;
+    }
     main .card-container p {
         font-size: 21px;
     }
     main .card-container h3 {
         font-size: 26px;
+    }
+    main .animation-container {
+      height: 30vh;
+      margin-top: 64px;
+    }
+    main #animation-text {
+      font-size: 54px;
     }
 }
