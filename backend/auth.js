@@ -74,15 +74,13 @@ signup.addEventListener("click", (event) => {
     .then((userCredential) => {
       // Signed in
       user = userCredential.user.uid;
-
-      document.getElementById("user-created").style.display = "block";
-      setTimeout(function () {
-        document.getElementById("user-created").style.display = "none";
-      }, 3000);
       //calling a function to upload profile-pic to firebase storage with name = userid
       store(user);
       // calling a function to upload customer data to firestore DB
       addCustomer(user, username, contactNumber, address);
+      setTimeout(()=> {
+        window.location.href = "customer.html";
+      },2500);
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -132,10 +130,7 @@ login.addEventListener("click", (event) => {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      document.getElementById("user-loggedin").style.display = "block";
-      setTimeout(function () {
-        document.getElementById("user-loggedin").style.display = "none";
-      }, 3000);
+      window.location.href = "customer.html";
     })
     .catch((error) => {
       const errorCode = error.code;

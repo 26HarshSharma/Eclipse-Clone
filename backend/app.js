@@ -149,6 +149,7 @@ logout.addEventListener("click", (event) => {
       document.getElementById("user-sign-out").style.display = "none";
     }, 3000);
     document.getElementById("pro-pic").style.display = "none";
+    window.location.href = "../index.html";
   });
 });
 
