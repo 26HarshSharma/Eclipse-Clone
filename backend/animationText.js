@@ -8,4 +8,5 @@ let typed = new Typed(".auto-type", {
   typeSpeed: 50,
   backSpeed: 50,
   loop: true,
+  fadeOut: true,
 });

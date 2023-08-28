@@ -71,6 +71,10 @@ body {
 }
 
 /* animation container Inside main */
+.animation-container {
+    height: 15vh;
+}
+
 .animation-container h2 {
   color: white;
   font-family: monospace;
