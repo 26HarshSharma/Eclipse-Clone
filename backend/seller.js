@@ -1,11 +1,4 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  push,
-  onValue,
-  remove,
-} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import {
   getFirestore,
@@ -31,48 +24,22 @@ document.getElementById("preloader").style.display = "inline-block";
 document.getElementById("loader-container").style.display = "block";
 //some firebase stuff, needed for all projects based on firebase.
 const app = initializeApp(appSettings);
-const database = getDatabase(app);
+
 const auth = getAuth();
 const fireDB = getFirestore();
-const colref = collection(fireDB, "customer");
+const colref = collection(fireDB, "seller");
 
-const products = document.getElementById("products");
-const add = document.getElementById("add");
-let list = document.getElementById("list");
 const logout = document.getElementById("logout");
 
-//Logic to insert products into the UI
-function insertProducts(products, loggedInUserId) {
-  let productId = products[0];
-  let productVal = products[1];
-  let listItem = document.createElement("li");
-  listItem.textContent = `${productVal}`;
-  listItem.classList.add("list-items");
-  listItem.addEventListener("click", () =>
-    removeProducts(productId, loggedInUserId)
-  );
-  list.append(listItem);
-}
 
-//deleting elemets from DB
-let removeProducts = (productId, loggedInUserId) => {
-  let exactLocationOfProductsInDB = ref(
-    database,
-    `products/${loggedInUserId}/${productId}`
-  );
-  remove(exactLocationOfProductsInDB);
-};
 
-function clearInputField() {
-  products.value = "";
-}
 
-function clearList() {
-  list.innerHTML = "";
-}
+
+
+
 
 //Main code to fetch items from DB and Push into the DB (*NOTE - Very Important!)
-function loggedInUser(productsVal, flag) {
+function loggedInUser(flag) {
   let loggedInUserId;
   auth.onAuthStateChanged((user) => {
     if (user === null) return;
@@ -81,32 +48,10 @@ function loggedInUser(productsVal, flag) {
       profile(loggedInUserId);
     }
   });
-  setTimeout(function () {
-    //getting the DB referrence (exact location where we need to store data)
-    const productsInDB = ref(database, `products/${loggedInUserId}`);
-
-    //pushing items to DB (firebase)
-    if (productsVal !== "") push(productsInDB, productsVal);
-
-    //fetching data from firebase DB
-    onValue(productsInDB, function (snapshot) {
-      //If our db got empty, we deleted all elements, then our snapshot will not exist.
-      if (!snapshot.exists()) {
-        list.innerHTML = "No items here...yet";
-        return;
-      }
-      let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
-
-      clearList();
-      for (let product of productsArrayEnteries) {
-        insertProducts(product, loggedInUserId);
-      }
-    });
-  }, 0);
 }
 
 //profile
-loggedInUser("", true);
+loggedInUser(true);
 async function profile(loggedInUserId) {
   const q = query(colref, where("id", "==", `${loggedInUserId}`));
   const querySnapshot = await getDocs(q);
@@ -117,7 +62,7 @@ async function profile(loggedInUserId) {
     try {
       // doc.data() is never undefined for query doc snapshots
       document.getElementById("profile-name").style.display = "block";
-      document.getElementById("profile-name").textContent = doc.data().Name;
+      document.getElementById("profile-name").textContent = doc.data().SellerName;
       document.getElementById("preloader").style.display = "none";
       document.getElementById("loader-container").style.display = "none";
     } catch (error) {
@@ -126,19 +71,6 @@ async function profile(loggedInUserId) {
   });
 }
 
-//Add button event listener, adding products to realtime DB
-add.addEventListener("click", () => {
-  const productsVal = products.value;
-  if (productsVal === "") {
-    document.getElementsByClassName("disp")[0].style.display = "block";
-    setTimeout(function () {
-      document.getElementsByClassName("disp")[0].style.display = "none";
-    }, 3000);
-    return;
-  }
-  clearInputField();
-  loggedInUser(productsVal, false);
-});
 
 //signing out functionality
 logout.addEventListener("click", (event) => {
@@ -167,9 +99,7 @@ auth.onAuthStateChanged((user) => {
     document.getElementById("preloader").style.display = "none";
       document.getElementById("loader-container").style.display = "none";
   } else {
-    list.style.display = "block";
-    add.style.display = "inline";
-    products.style.display = "block";
+    
     logout.style.display = "block";
 
     document.getElementById("login").style.display = "none";

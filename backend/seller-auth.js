@@ -11,15 +11,11 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import {
   getFirestore,
   collection,
   addDoc,
-  query,
-  where,
-  getDocs,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
@@ -45,8 +41,7 @@ const fireDB = getFirestore();
 let storageRef;
 
 //collection referrence:
-const colref = collection(fireDB, "customer");
-const sellerColRef = collection(fireDB, "seller");
+const colref = collection(fireDB, "seller");
 
 //my initializations
 const signup = document.getElementById("sign-up");
@@ -65,15 +60,17 @@ signup.addEventListener("click", (event) => {
   event.preventDefault();
   let email = document.getElementById("exampleInputEmail1").value;
   let password = document.getElementById("exampleInputPassword1").value;
-  let username = document.getElementById("name").value;
-  let address = document.getElementById("address").value;
-  let contactNumber = document.getElementById("contact-number").value;
+  let sellerName = document.getElementById("seller-name").value;
+  let shopName = document.getElementById("shop-name").value;
+  let shopAddress = document.getElementById("shop-address").value;
+  let sellerContactNumber = document.getElementById("seller-contact-number").value;
   let user;
   document.getElementById("exampleInputEmail1").value = "";
   document.getElementById("exampleInputPassword1").value = "";
-  document.getElementById("name").value = "";
-  document.getElementById("address").value = "";
-  document.getElementById("contact-number").value = "";
+  document.getElementById("seller-name").value = "";
+  document.getElementById("shop-address").value = "";
+  document.getElementById("seller-contact-number").value = "";
+  document.getElementById("shop-name").value = "";
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
@@ -81,9 +78,9 @@ signup.addEventListener("click", (event) => {
       //calling a function to upload profile-pic to firebase storage with name = userid
       store(user);
       // calling a function to upload customer data to firestore DB
-      addCustomer(user, username, contactNumber, address);
+      addCustomer(user, sellerName, shopName, shopAddress, sellerContactNumber);
       setTimeout(()=> {
-        window.location.href = "customer.html";
+        window.location.href = "seller.html";
       },2500);
     })
     .catch((error) => {
@@ -99,13 +96,14 @@ signup.addEventListener("click", (event) => {
 });
 
 //adding a customer details to firestore DB
-async function addCustomer(user, username, contact, address) {
+async function addCustomer(user, sellerName, shopName, shopAddress, sellerContactNumber) {
   addDoc(colref, {
     id: user,
-    Name: username,
-    Contact: contact,
-    Address: address,
-    seller: false,
+    SellerName: sellerName,
+    ShopName: shopName,
+    SellerContactNumber: sellerContactNumber,
+    ShopAddress: shopAddress,
+    seller: true,
   });
 }
 
@@ -135,20 +133,7 @@ login.addEventListener("click", (event) => {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      let isSeller = profileInfo(user.uid);
-      isSeller.then((isSellerValue) => {
-        
-        if(!isSellerValue) {
-          setTimeout(()=> {
-            window.location.href = "customer.html";
-          },2000)
-        }
-        else {
-          setTimeout(()=> {
-            window.location.href = "seller.html";
-          },2000)
-        }
-      })
+      window.location.href = "customer.html";
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -156,7 +141,7 @@ login.addEventListener("click", (event) => {
         document.getElementById("user-invalid").style.display = "block";
         setTimeout(function () {
           document.getElementById("user-invalid").style.display = "none";
-        }, 10000);
+        }, 3000);
       }
       if (errorCode == "auth/wrong-password") {
         document.getElementById("user-invalid-password").style.display =
@@ -164,21 +149,8 @@ login.addEventListener("click", (event) => {
         setTimeout(function () {
           document.getElementById("user-invalid-password").style.display =
             "none";
-        }, 10000);
+        }, 3000);
       }
     });
 });
 
-//fetching data from firestore
-async function profileInfo(loggedInUserId) {
-  const q1 = query(colref, where("id", "==", `${loggedInUserId}`));
-  const querySnapshotCustomer = await getDocs(q1);
-  if (!querySnapshotCustomer.empty) {
-    return false; // This indicates the user is a customer
-  }
-  const q2 = query(sellerColRef, where("id", "==", `${loggedInUserId}`));
-  const querySnapshotSeller = await getDocs(q2);
-  if (!querySnapshotSeller.empty) {
-    return true; // This indicates the user is a seller
-  }
-}
