@@ -11,7 +11,6 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import {
   getFirestore,
@@ -68,12 +67,16 @@ signup.addEventListener("click", (event) => {
   let username = document.getElementById("name").value;
   let address = document.getElementById("address").value;
   let contactNumber = document.getElementById("contact-number").value;
+  let state = document.getElementById("state").value;
+  let city = document.getElementById("city").value;
   let user;
   document.getElementById("exampleInputEmail1").value = "";
   document.getElementById("exampleInputPassword1").value = "";
   document.getElementById("name").value = "";
   document.getElementById("address").value = "";
   document.getElementById("contact-number").value = "";
+  document.getElementById("state").value = "";
+  document.getElementById("city").value = "";
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
@@ -81,7 +84,7 @@ signup.addEventListener("click", (event) => {
       //calling a function to upload profile-pic to firebase storage with name = userid
       store(user);
       // calling a function to upload customer data to firestore DB
-      addCustomer(user, username, contactNumber, address);
+      addCustomer(user, username, contactNumber, address, state, city);
       setTimeout(()=> {
         window.location.href = "customer.html";
       },2500);
@@ -99,12 +102,14 @@ signup.addEventListener("click", (event) => {
 });
 
 //adding a customer details to firestore DB
-async function addCustomer(user, username, contact, address) {
+async function addCustomer(user, username, contact, address, state, city) {
   addDoc(colref, {
     id: user,
     Name: username,
     Contact: contact,
     Address: address,
+    State: state,
+    City: city,
     seller: false,
   });
 }

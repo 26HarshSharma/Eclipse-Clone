@@ -64,6 +64,8 @@ signup.addEventListener("click", (event) => {
   let shopName = document.getElementById("shop-name").value;
   let shopAddress = document.getElementById("shop-address").value;
   let sellerContactNumber = document.getElementById("seller-contact-number").value;
+  let state = document.getElementById("state").value;
+  let city = document.getElementById("city").value;
   let user;
   document.getElementById("exampleInputEmail1").value = "";
   document.getElementById("exampleInputPassword1").value = "";
@@ -71,6 +73,8 @@ signup.addEventListener("click", (event) => {
   document.getElementById("shop-address").value = "";
   document.getElementById("seller-contact-number").value = "";
   document.getElementById("shop-name").value = "";
+  document.getElementById("state").value = "";
+  document.getElementById("city").value = "";
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
@@ -78,7 +82,7 @@ signup.addEventListener("click", (event) => {
       //calling a function to upload profile-pic to firebase storage with name = userid
       store(user);
       // calling a function to upload customer data to firestore DB
-      addCustomer(user, sellerName, shopName, shopAddress, sellerContactNumber);
+      addCustomer(user, sellerName, shopName, shopAddress, sellerContactNumber, state, city);
       setTimeout(()=> {
         window.location.href = "seller.html";
       },2500);
@@ -96,13 +100,15 @@ signup.addEventListener("click", (event) => {
 });
 
 //adding a customer details to firestore DB
-async function addCustomer(user, sellerName, shopName, shopAddress, sellerContactNumber) {
+async function addCustomer(user, sellerName, shopName, shopAddress, sellerContactNumber, state, city) {
   addDoc(colref, {
     id: user,
     SellerName: sellerName,
     ShopName: shopName,
     SellerContactNumber: sellerContactNumber,
     ShopAddress: shopAddress,
+    State: state,
+    City: city,
     seller: true,
   });
 }
