@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import {
   getFirestore,
   collection,
@@ -7,6 +7,12 @@ import {
   where,
   getDocs,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import {
+  getDatabase,
+  ref,
+  push,
+  onValue,
+} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
 
 const appSettings = {
   databaseURL:
@@ -21,41 +27,108 @@ const appSettings = {
 };
 
 const app = initializeApp(appSettings);
-
+const auth = getAuth();
 const fireDB = getFirestore();
+const database = getDatabase(app);
 const colref = collection(fireDB, "seller");
+const customerColRef = collection(fireDB, "customer");
+
+let customerName;
+let customerAddress;
+let customerContactNumber;
 
 async function sellerInfo() {
   const q = query(colref, where("City", "==", `Budaun`));
   const querySnapshot = await getDocs(q);
+
   if (querySnapshot.length === 0) {
     const element = document.createElement("p");
     element.textContent = "no seller found in your city";
     return element;
   }
-  querySnapshot.forEach((doc) => {
-    try {
-      // doc.data() is never undefined for query doc snapshots
-      const newSeller = document.createElement("section");
-      newSeller.id = "seller-list";
-      newSeller.innerHTML = `<div>
-      <h1 id="shop-name">
-        ${doc.data().ShopName} <span id="seller-name">${doc.data().SellerName}</span>
-      </h1>
-      <p id="seller-address">${doc.data().ShopAddress}</p>
-      
-    </div>
-    <div class="buttons">
-      <a href="#" class="btn-alt">Send Order</a>
-    </div>`;
-    const sellerListContainer = document.getElementById("seller-list-container");
-    sellerListContainer.appendChild(newSeller);
-    //   document.getElementById("preloader").style.display = "none";
-    //   document.getElementById("loader-container").style.display = "none";
-    } catch (error) {
-      console.log("Error:", error);
-    }
+
+  const sellerListContainer = document.getElementById("seller-list-container");
+
+  return new Promise((resolve) => {
+    querySnapshot.forEach((doc) => {
+      try {
+        const newSeller = document.createElement("section");
+        newSeller.id = "seller-list";
+        newSeller.innerHTML = `<div>
+          <h1 id="shop-name">
+            ${doc.data().ShopName} <span id="seller-name">${
+          doc.data().SellerName
+        }</span>
+          </h1>
+          <p id="seller-address">${doc.data().ShopAddress}</p>
+        </div>
+        <div class="buttons">
+          <a href="#" id=${doc.data().id} class="btn-alt">Send Order</a>
+        </div>`;
+        sellerListContainer.appendChild(newSeller);
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    });
+
+    resolve(); // Resolve the promise when all seller info is appended to the DOM
   });
 }
 
-sellerInfo();
+async function sendReq() {
+  const sendReqBtns = document.querySelectorAll(".btn-alt");
+  console.log(sendReqBtns);
+  for (const element of sendReqBtns) {
+    element.addEventListener("click", () => {
+      document.getElementById("preloader").style.display = "block";
+      document.getElementById("loader-container").style.display = "block";
+      console.log(element.id);
+      loggedInUser(element.id);
+    });
+  }
+}
+
+function loggedInUser(sellerId) {
+  let loggedInUserId;
+  auth.onAuthStateChanged((user) => {
+    if (user === null) return;
+    loggedInUserId = user.uid;
+  });
+  setTimeout(async function () {
+    const productsInDB = ref(database, `products/${loggedInUserId}`);
+    const pushProductsToSellerProductsList = ref(database, `orders/${sellerId}/products/${loggedInUserId}`);
+    const pushProductsToSellerCustomer = ref(database, `orders/${sellerId}/customer/${loggedInUserId}`);
+    const qCustomer = query(customerColRef, where("id", "==", `${loggedInUserId}`));
+    const querySnapshot = await getDocs(qCustomer);
+    querySnapshot.forEach((doc) => {
+      try {
+        // doc.data() is never undefined for query doc snapshots
+        customerName = doc.data().Name;
+        customerAddress = doc.data().Address;
+        customerContactNumber = doc.data().Contact;
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    },
+    onValue(productsInDB, function (snapshot) {
+      let productsArray = Object.values(snapshot.val());
+      for (const element of productsArray) {
+        push(pushProductsToSellerProductsList, element);
+      }
+      push(pushProductsToSellerCustomer, customerName);
+      push(pushProductsToSellerCustomer, customerAddress);
+      push(pushProductsToSellerCustomer, customerContactNumber);
+      console.log(productsArray);
+      document.getElementById("preloader").style.display = "none";
+      document.getElementById("loader-container").style.display = "none";
+      document.getElementById(`${sellerId}`).textContent = "Request Send";
+    }));
+  }, 0);
+}
+
+(async () => {
+  await sellerInfo(); // Wait for sellerInfo to complete
+  document.getElementById("preloader").style.display = "none";
+  document.getElementById("loader-container").style.display = "none";
+  sendReq();
+})();

@@ -4,10 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../public/sellerList.css" />
+    <link rel="stylesheet" href="../public/loader.css">
     <script type="module" src="../backend/sellerList.js" defer></script>
     <title>Seller List</title>
   </head>
   <body>
+    <div id="loader-container">
+      <div
+        style="
+          text-align: center;
+          margin-top: 9px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          width: 100%;
+        "
+      >
+        <span class="loader" id="preloader"></span>
+      </div>
+    </div>
     <header>
       <nav>
         <div class="d-flex">
