@@ -36,6 +36,7 @@ const customerColRef = collection(fireDB, "customer");
 let customerName;
 let customerAddress;
 let customerContactNumber;
+let customerId;
 
 async function sellerInfo() {
   const q = query(colref, where("City", "==", `Budaun`));
@@ -77,12 +78,11 @@ async function sellerInfo() {
 
 async function sendReq() {
   const sendReqBtns = document.querySelectorAll(".btn-alt");
-  console.log(sendReqBtns);
   for (const element of sendReqBtns) {
     element.addEventListener("click", () => {
       document.getElementById("preloader").style.display = "block";
       document.getElementById("loader-container").style.display = "block";
-      console.log(element.id);
+      // console.log(element.id);
       loggedInUser(element.id);
     });
   }
@@ -96,33 +96,47 @@ function loggedInUser(sellerId) {
   });
   setTimeout(async function () {
     const productsInDB = ref(database, `products/${loggedInUserId}`);
-    const pushProductsToSellerProductsList = ref(database, `orders/${sellerId}/products/${loggedInUserId}`);
-    const pushProductsToSellerCustomer = ref(database, `orders/${sellerId}/customer/${loggedInUserId}`);
-    const qCustomer = query(customerColRef, where("id", "==", `${loggedInUserId}`));
+    const pushProductsToSellerProductsList = ref(
+      database,
+      `orders/${sellerId}/products/${loggedInUserId}`
+    );
+    const pushProductsToSellerCustomer = ref(
+      database,
+      `orders/${sellerId}/customer/${loggedInUserId}`
+    );
+    const qCustomer = query(
+      customerColRef,
+      where("id", "==", `${loggedInUserId}`)
+    );
     const querySnapshot = await getDocs(qCustomer);
-    querySnapshot.forEach((doc) => {
-      try {
-        // doc.data() is never undefined for query doc snapshots
-        customerName = doc.data().Name;
-        customerAddress = doc.data().Address;
-        customerContactNumber = doc.data().Contact;
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    },
-    onValue(productsInDB, function (snapshot) {
-      let productsArray = Object.values(snapshot.val());
-      for (const element of productsArray) {
-        push(pushProductsToSellerProductsList, element);
-      }
-      push(pushProductsToSellerCustomer, customerName);
-      push(pushProductsToSellerCustomer, customerAddress);
-      push(pushProductsToSellerCustomer, customerContactNumber);
-      console.log(productsArray);
-      document.getElementById("preloader").style.display = "none";
-      document.getElementById("loader-container").style.display = "none";
-      document.getElementById(`${sellerId}`).textContent = "Request Send";
-    }));
+    querySnapshot.forEach(
+      (doc) => {
+        try {
+          // doc.data() is never undefined for query doc snapshots
+          customerName = doc.data().Name;
+          customerAddress = doc.data().Address;
+          customerContactNumber = doc.data().Contact;
+          customerId = doc.data().id;
+        } catch (error) {
+          console.log("Error:", error);
+        }
+      },
+      onValue(productsInDB, function (snapshot) {
+        let productsArray = Object.values(snapshot.val());
+        for (const element of productsArray) {
+          push(pushProductsToSellerProductsList, element);
+        }
+        push(pushProductsToSellerCustomer, [customerName, customerAddress, customerContactNumber, customerId]);
+        // push(pushProductsToSellerCustomer, customerName);
+        // push(pushProductsToSellerCustomer, customerAddress);
+        // push(pushProductsToSellerCustomer, customerContactNumber);
+        // push(pushProductsToSellerCustomer, customerId);
+
+        document.getElementById("preloader").style.display = "none";
+        document.getElementById("loader-container").style.display = "none";
+        document.getElementById(`${sellerId}`).textContent = "Request Send";
+      })
+    );
   }, 0);
 }
 
