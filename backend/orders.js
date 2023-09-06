@@ -22,27 +22,30 @@ const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const auth = getAuth();
 
-let userId;
+let customer;
 auth.onAuthStateChanged((user) => {
   if (user === null) return;
   let sellerId = user.uid;
   const customerColRef = ref(database, `orders/${sellerId}/customer`);
   onValue(customerColRef, function (snapshot) {
     let customerDetails = Object.values(snapshot.val());
-    console.log(customerDetails);
     document.getElementById("customer-list-container").innerHTML = "";
-    for (let i = 0; i < customerDetails.length; i ++) {
-      let values = Object.values(customerDetails[i]);
-      console.log(values[i][3]);
-      const customer = document.createElement("div");
-      customer.className = "customer";
-      customer.innerHTML = `<div><p>${values[i][0]}</p>
-    <p>${values[i][1]}</p>
-    <p>${values[i][2]}</p></div>
+    for (let i = 0; i < customerDetails.length; i++) {
+      customer = Object.values(customerDetails[i]); // Get the current customer object
+      console.log(customer[0]);
+      // Access the properties of the customer object directly
+      const customerDiv = document.createElement("div");
+      customerDiv.className = "customer";
+      customerDiv.innerHTML = `<div><p>${customer[0][0]}</p>
+    <p>${customer[0][1]}</p>
+    <p>${customer[0][2]}</p></div>
     <div>
-    <a href="#" class="btn-small">View Products</a>
+    <a href="productsList.html" id="${customer[0][3]}" class="btn-small">View Products</a>
     `;
-      document.getElementById("customer-list-container").append(customer);
+      document.getElementById("customer-list-container").append(customerDiv);
     }
   });
 });
+
+
+
