@@ -40,12 +40,23 @@ auth.onAuthStateChanged((user) => {
     <p>${customer[0][1]}</p>
     <p>${customer[0][2]}</p></div>
     <div>
-    <a href="productsList.html" id="${customer[0][3]}" class="btn-small">View Products</a>
+    <a id="${customer[0][3]}" class="btn-small">View Products</a>
     `;
       document.getElementById("customer-list-container").append(customerDiv);
     }
+    productsBtns();
   });
 });
 
-
-
+async function productsBtns() {
+  const allBtns = document.querySelectorAll(".btn-small");
+  for (const element of allBtns) {
+    element.addEventListener("click", () => {
+      console.log(element.id);
+      const value = element.id;
+      const encodedValue = encodeURIComponent(value);
+      const productsList = `productsList.html?param1=${encodedValue}`;
+      window.location.href = productsList;
+    });
+  }
+}
