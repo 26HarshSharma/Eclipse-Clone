@@ -18,11 +18,9 @@ const appSettings = {
   measurementId: "G-XQP42QYYH5",
 };
 
-
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const auth = getAuth();
-
 
 function getQueryParameter(name) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -33,18 +31,43 @@ function getQueryParameter(name) {
 const param1 = getQueryParameter("param1");
 
 // Use the values as needed
-console.log(`Value 1: ${param1}`);
+//console.log(`Value 1: ${param1}`);
 
 const productsList = document.getElementById("products");
 
 auth.onAuthStateChanged((user) => {
-    if (user === null) return;
-    let sellerId = user.uid;
+  if (user === null) return;
+  let sellerId = user.uid;
 
-const productsColRef = ref(database, `orders/${sellerId}/products/${param1}`);
-onValue(productsColRef, function (snapshot) {
-  let products = Object.values(snapshot.val());
-  console.log(products);
-  productsList.innerText = products;
+  const productsColRef = ref(database, `orders/${sellerId}/products/${param1}`);
+  onValue(productsColRef, function (snapshot) {
+    let products = Object.values(snapshot.val());
+    for (const element of products) {
+      const product = document.createElement("div");
+      product.className = "product";
+      product.innerHTML = `<p>${element}</p>`;
+      document.getElementById("products-recieved").append(product);
+    }
+    const allProducts = document.querySelectorAll(".product");
+    for (const element of allProducts) {
+      element.addEventListener("click", function clickHandler() {
+        const duplicateElement = element.cloneNode(true);
+        element.style.textDecoration = "line-through";
+        document.getElementById("available-products").append(duplicateElement);
+        const inputElement = document.createElement("input");
+        const close = document.createElement("div");
+        close.className = "closeBtn";
+        close.innerHTML = `<span class="material-symbols-outlined"> close </span>`;
+        inputElement.placeholder = "Price";
+        duplicateElement.append(inputElement);
+        duplicateElement.append(close);
+        close.addEventListener("click", function closeHandler() {
+          duplicateElement.style.display = "none";
+          element.style.textDecoration = "none";
+          element.addEventListener("click",clickHandler);
+        });
+        element.removeEventListener("click", clickHandler);
+      });
+    }
+  });
 });
-})
