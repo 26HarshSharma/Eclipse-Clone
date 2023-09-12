@@ -127,10 +127,6 @@ function loggedInUser(sellerId) {
           push(pushProductsToSellerProductsList, element);
         }
         push(pushProductsToSellerCustomer, [customerName, customerAddress, customerContactNumber, customerId]);
-        // push(pushProductsToSellerCustomer, customerName);
-        // push(pushProductsToSellerCustomer, customerAddress);
-        // push(pushProductsToSellerCustomer, customerContactNumber);
-        // push(pushProductsToSellerCustomer, customerId);
 
         document.getElementById("preloader").style.display = "none";
         document.getElementById("loader-container").style.display = "none";

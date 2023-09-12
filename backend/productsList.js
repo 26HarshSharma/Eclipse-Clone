@@ -3,8 +3,16 @@ import {
   getDatabase,
   ref,
   onValue,
+  push,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 const appSettings = {
   databaseURL:
@@ -21,6 +29,8 @@ const appSettings = {
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const auth = getAuth();
+const fireDB = getFirestore();
+const colref = collection(fireDB, "seller");
 
 function getQueryParameter(name) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -33,10 +43,15 @@ const param1 = getQueryParameter("param1");
 // Use the values as needed
 console.log(`Value 1: ${param1}`);
 
+const askingConfirmationRef = ref(database, `askingConfirmation/${param1}`);
+
 const receipt = document.getElementById("receipt");
 const finalCostBtn = document.getElementById("final-cost-btn");
 receipt.style.display = "none";
 finalCostBtn.style.display = "none";
+
+let receiptData = [];
+let availableProducts = [];
 
 auth.onAuthStateChanged((user) => {
   if (user === null) return;
@@ -54,6 +69,7 @@ auth.onAuthStateChanged((user) => {
     const allProducts = document.querySelectorAll(".product");
     for (const element of allProducts) {
       element.addEventListener("click", function clickHandler() {
+        availableProducts.push(element.firstChild.textContent);
         const duplicateElement = element.cloneNode(true);
         element.style.textDecoration = "line-through";
         receipt.style.display = "flex";
@@ -85,20 +101,30 @@ const totalPrice = document.getElementById("total-btn");
 totalPrice.addEventListener("click", () => {
   let price = 0;
   finalCostBtn.style.display = "flex";
-  if(document.querySelectorAll(".total-price-para").length > 0) {
+  if (document.querySelectorAll(".total-price-para").length > 0) {
     document.querySelectorAll(".total-price-para")[0].remove();
   }
-  if(document.querySelectorAll(".input-element").length > 0) {
+  if (document.querySelectorAll(".input-element").length > 0) {
     document.querySelectorAll(".input-element")[0].remove();
   }
-  if(document.querySelectorAll(".lable-element").length > 0) {
+  if (document.querySelectorAll(".lable-element").length > 0) {
     document.querySelectorAll(".lable-element")[0].remove();
   }
-  if(document.querySelectorAll("#delivery-charges-container .lable-element").length > 0) {
-    document.querySelectorAll("#delivery-charges-container .lable-element")[0].remove();
+  if (
+    document.querySelectorAll("#delivery-charges-container .lable-element")
+      .length > 0
+  ) {
+    document
+      .querySelectorAll("#delivery-charges-container .lable-element")[0]
+      .remove();
   }
-  if(document.querySelectorAll("#delivery-charges-container .input-element").length > 0) {
-    document.querySelectorAll("#delivery-charges-container .input-element")[0].remove();
+  if (
+    document.querySelectorAll("#delivery-charges-container .input-element")
+      .length > 0
+  ) {
+    document
+      .querySelectorAll("#delivery-charges-container .input-element")[0]
+      .remove();
   }
 
   const prices = document.querySelectorAll(".price-input");
@@ -121,19 +147,65 @@ totalPrice.addEventListener("click", () => {
   deliveryChargesLable.className = "lable-element";
   deliveryChargesInput.className = "input-element";
   deliveryChargesLable.textContent = "Delivery Charges (*not mandatory)";
-  document.getElementById("delivery-charges-container").append(deliveryChargesLable);
-  document.getElementById("delivery-charges-container").append(deliveryChargesInput);
+  document
+    .getElementById("delivery-charges-container")
+    .append(deliveryChargesLable);
+  document
+    .getElementById("delivery-charges-container")
+    .append(deliveryChargesInput);
   finalCostBtn.addEventListener("click", () => {
+    document.getElementById("send-confirmation-req").style.display = "block";
     const finalCostPara = document.createElement("p");
-    if(document.querySelectorAll(".final-cost-para").length > 0) {
+    if (document.querySelectorAll(".final-cost-para").length > 0) {
       document.querySelectorAll(".final-cost-para")[0].remove();
     }
     finalCostPara.className = "final-cost-para";
     finalCostPara.style.fontSize = "21px";
     finalCostPara.textContent =
-      (price -
-      (price * (discountRateInput.value / 100))) +
-      (+deliveryChargesInput.value);
+      price -
+      price * (discountRateInput.value / 100) +
+      +deliveryChargesInput.value;
+
+      auth.onAuthStateChanged((user) => {
+        if (user === null) return;
+        let sellerId = user.uid;
+      
+        profileInfo(sellerId);
+      });
+      
+      async function profileInfo(sellerId) {
+        const q = query(colref, where("id", "==", `${sellerId}`));
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.length === 0) {
+          return;
+        }
+        querySnapshot.forEach((doc) => {
+          try {
+            // doc.data() is never undefined for query doc snapshots
+            receiptData.push(doc.data().SellerName);
+            receiptData.push(doc.data().ShopName);
+            receiptData.push(doc.data().SellerContactNumber);
+            receiptData.push(doc.data().ShopAddress);
+          } catch (error) {
+            console.log("Error:", error);
+          }
+        });
+      }
+      
+
+    receiptData.push(+discountRateInput.value);
+    receiptData.push(+deliveryChargesInput.value);
+    receiptData.push(+finalCostPara.textContent);
+    receiptData.push(availableProducts);
+    document
+      .getElementById("send-confirmation-req")
+      .addEventListener("click", () => {
+        pushToAskingForConfirmation();
+      });
     document.getElementById("final-cost-container").append(finalCostPara);
   });
 });
+
+function pushToAskingForConfirmation() {
+  push(askingConfirmationRef, receiptData);
+}

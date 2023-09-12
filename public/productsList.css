@@ -111,3 +111,7 @@ header nav {
   border-radius: 4px;
   border: none;
 }
+
+#send-confirmation-req {
+  display: none;
+}

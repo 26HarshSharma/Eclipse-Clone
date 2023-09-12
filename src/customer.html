@@ -17,7 +17,7 @@
       crossorigin="anonymous"
     />
   </head>
-  <body>
+  <body id="body">
     <div id="loader-container">
       <div
         style="
@@ -54,11 +54,7 @@
           <a href="#" id="logout" class="btn btn-outline-success mx-2">
             Sign Out
           </a>
-          <a
-            href="login.html"
-            id="login"
-            class="btn btn-outline-success me-2"
-          >
+          <a href="login.html" id="login" class="btn btn-outline-success me-2">
             Login
           </a>
         </div>
@@ -74,33 +70,52 @@
     </header>
     <main>
       <section class="main-container">
-        <div class="cute-cat">
-          <img src="../assets/Optimized-cat.jpg" alt="A cute cat" />
-        </div>
-        <div class="products-container">
-          <div class="alert alert-danger disp rounded-0" role="alert">
-            Product field cannot be empty!
-          </div>
-          <div class="input-group mb-3 w-75 mx-auto border border-dark rounded">
-            <span class="input-group-text" id="inputGroup-sizing-default"
-              >Products</span
+        <section class="create-list">
+          <h2 style="text-align: center; margin-top: 12px; color: white">
+            Add Products to Basket
+          </h2>
+          <!-- <div class="cute-cat">
+            <img src="../assets/Optimized-cat.jpg" alt="A cute cat" />
+          </div> -->
+          <div class="products-container">
+            <div class="alert alert-danger disp rounded-0" role="alert">
+              Product field cannot be empty!
+            </div>
+            <div
+              class="input-group mb-3 w-75 mx-auto border border-dark rounded"
             >
+              <span class="input-group-text" id="inputGroup-sizing-default"
+                >Products</span
+              >
 
-            <input
-              type="text"
-              class="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-default"
-              name="products"
-              id="products"
-            />
+              <input
+                type="text"
+                class="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default"
+                name="products"
+                id="products"
+              />
+            </div>
+            <a id="add" class="btn btn-outline-success me-2 mb-2">Add</a>
+            <a
+              href="sellerList.html"
+              id="order"
+              class="btn btn-outline-primary me-2"
+              >Make Order</a
+            >
           </div>
-          <a id="add" class="btn btn-outline-success me-2 mb-2">Add</a>
-          <a href="sellerList.html" id="order" class="btn btn-outline-primary me-2 ">Make Order</a>
-        </div>
-        <div style="text-align: center" class="products-list">
-          <ul id="list"></ul>
-        </div>
+          <div style="text-align: center" class="products-list">
+            <ul id="list"></ul>
+          </div>
+        </section>
+      </section>
+      <section class="main-container">
+        <section id="confirmation-req">
+          <h2 style="text-align: center; margin-top: 12px; color: white">
+            Confirmation Requests
+          </h2>
+        </section>
       </section>
     </main>
   </body>

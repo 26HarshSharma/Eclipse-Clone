@@ -93,8 +93,10 @@ function loggedInUser(productsVal, flag) {
       //If our db got empty, we deleted all elements, then our snapshot will not exist.
       if (!snapshot.exists()) {
         list.innerHTML = "No items here...yet";
+        list.style.color = "gray";
         return;
       }
+      list.style.color = "black";
       let productsArrayEnteries = Object.entries(snapshot.val()); //convert an object into 2d array having object keys and values.
 
       clearList();
@@ -144,7 +146,6 @@ add.addEventListener("click", () => {
 logout.addEventListener("click", (event) => {
   event.preventDefault();
   auth.signOut().then(() => {
-    
     document.getElementById("pro-pic").style.display = "none";
     window.location.href = "../index.html";
   });
@@ -165,7 +166,7 @@ auth.onAuthStateChanged((user) => {
     document.getElementById("login").style.display = "block";
     document.getElementById("signUp").style.display = "block";
     document.getElementById("preloader").style.display = "none";
-      document.getElementById("loader-container").style.display = "none";
+    document.getElementById("loader-container").style.display = "none";
   } else {
     list.style.display = "block";
     add.style.display = "inline";
@@ -174,7 +175,30 @@ auth.onAuthStateChanged((user) => {
 
     document.getElementById("login").style.display = "none";
     document.getElementById("signUp").style.display = "none";
-    
+
     loggedInUser("", true, user.uid);
   }
+});
+
+auth.onAuthStateChanged((user) => {
+  if (user === null) return;
+  let loggedInUserId = user.uid;
+  const askingConfirmationRef = ref(
+    database,
+    `askingConfirmation/${loggedInUserId}`
+  );
+  onValue(askingConfirmationRef, (snapshot) => {
+    const shopDetails = Object.values(snapshot.val());
+    for(let i = 0; i < shopDetails.length; i ++) {
+      const shopReq = document.createElement("section");
+      shopReq.className = "shops";
+      shopReq.innerHTML = `<p class="shop-name">Seller Name: ${shopDetails[i][4]}</p>
+      <p class="seller-name">Shop Name: ${shopDetails[i][5]}</p>
+      <p class="shop-address">Contact: ${shopDetails[i][6]}</p>
+      <p class="seller-contact">Shop Address: ${shopDetails[i][7]}</p>
+      <button class="btn btn-success">View Details</button>
+      `
+      document.getElementById("confirmation-req").append(shopReq);
+    }
+  });
 });

@@ -1,7 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Poppins:wght@200;400&display=swap");
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+#body {
+  font-family: "Poppins", sans-serif;
+  background-color: rgb(0, 0, 46);
 }
 
 main {
@@ -11,13 +17,9 @@ main {
 .main-container {
   max-width: 500px;
   margin: 32px auto;
-  border: 10px solid burlywood;
+  border: 1px solid gray;
   border-radius: 10px;
-}
-
-.main-container .cute-cat img {
-  width: 100%;
-  height: auto;
+  background-color: black;
 }
 
 .products-container {
@@ -58,7 +60,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 40px;
 }
 
 #pro-pic {
@@ -66,4 +68,24 @@ main {
   width: 50px;
   border-radius: 50%;
   display: none;
+}
+
+#confirmation-req {
+}
+
+.shops {
+  width: 90%;
+  margin: 12px auto;
+  padding: 12px;
+  border: 1px solid white;
+  border-radius: 8px;
+  color: white;
+}
+
+.shops p {
+  margin: 0;
+}
+
+.shops button {
+  margin-top: 12px;
 }
