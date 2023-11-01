@@ -70,9 +70,6 @@ main {
   display: none;
 }
 
-#confirmation-req {
-}
-
 .shops {
   width: 90%;
   margin: 12px auto;
@@ -86,6 +83,7 @@ main {
   margin: 0;
 }
 
-.shops button {
+.shops a {
+  display: block;
   margin-top: 12px;
 }

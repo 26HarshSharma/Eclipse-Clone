@@ -196,9 +196,23 @@ auth.onAuthStateChanged((user) => {
       <p class="seller-name">Shop Name: ${shopDetails[i][5]}</p>
       <p class="shop-address">Contact: ${shopDetails[i][6]}</p>
       <p class="seller-contact">Shop Address: ${shopDetails[i][7]}</p>
-      <button class="btn btn-success">View Details</button>
+      <a id="${shopDetails[i][8]}" class="btn btn-success view-details-btn" >View Details</a>
       `
       document.getElementById("confirmation-req").append(shopReq);
+      viewDetailsBtns();
     }
   });
 });
+
+
+async function viewDetailsBtns() {
+  const allBtns = document.querySelectorAll(".view-details-btn");
+  for (const element of allBtns) {
+    element.addEventListener("click", () => {
+      const value = element.id;
+      const encodedValue = encodeURIComponent(value);
+      const availableProducts = `availableProducts.html?param=${encodedValue}`;
+      window.location.href = availableProducts;
+    });
+  }
+}

@@ -186,6 +186,7 @@ totalPrice.addEventListener("click", () => {
             receiptData.push(doc.data().ShopName);
             receiptData.push(doc.data().SellerContactNumber);
             receiptData.push(doc.data().ShopAddress);
+            receiptData.push(doc.data().id);
           } catch (error) {
             console.log("Error:", error);
           }
