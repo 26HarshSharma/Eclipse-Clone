@@ -85,7 +85,7 @@ header nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 75%;
 }
 
 #total-btn {
@@ -100,7 +100,7 @@ header nav {
   justify-content: space-between;
   align-items: center;
   margin-top: 6px;
-  width: 100%;
+  width: 75%;
 }
 
 .input-element {
@@ -114,4 +114,20 @@ header nav {
 
 #send-confirmation-req {
   display: none;
+}
+
+/*Media Queries*/
+@media (min-width: 1200px){
+  #products-recieved,
+  #available-products {
+  max-width: 50% ;
+  margin: 22px auto;
+ }
+ #receipt {
+  max-width: 50% ;
+  margin: 22px auto;
+ }
+ #products-recieved p {
+  cursor: pointer;
+ }
 }

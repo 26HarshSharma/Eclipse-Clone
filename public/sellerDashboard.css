@@ -80,3 +80,15 @@ body {
 #customer-list-container p {
   margin: 0;
 }
+
+/*Media Queries*/
+@media (min-width: 1200px){
+  main {
+    max-width: 50%;
+    margin: 22px auto;
+    font-size: 22px;
+  }
+ .btn-alt{
+  font-size: 22px;
+ }
+}
