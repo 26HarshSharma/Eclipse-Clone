@@ -196,7 +196,7 @@ auth.onAuthStateChanged((user) => {
       <p class="seller-name">Shop Name: ${shopDetails[i][5]}</p>
       <p class="shop-address">Contact: ${shopDetails[i][6]}</p>
       <p class="seller-contact">Shop Address: ${shopDetails[i][7]}</p>
-      <a id="${shopDetails[i][8]}" class="btn btn-success view-details-btn" >View Details</a>
+      <a id="${i}" class="btn btn-success view-details-btn" >View Details</a>
       `
       document.getElementById("confirmation-req").append(shopReq);
       viewDetailsBtns();

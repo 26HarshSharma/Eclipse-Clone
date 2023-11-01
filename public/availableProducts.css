@@ -26,5 +26,11 @@ main {
     border: 1px solid gray;
     padding: 6px;
     border-radius: 8px;
-    margin-top: 12px;
+    margin-top: 22px;
+}
+
+#available-products,#price-details, p {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-size: 18px;
 }
